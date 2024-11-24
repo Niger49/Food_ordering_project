@@ -26,8 +26,6 @@ function redirect($link){
 	die();
 }
 
-
-
 function send_email($email,$html,$subject){
 	$mail=new PHPMailer(true);
 	$mail->isSMTP();
