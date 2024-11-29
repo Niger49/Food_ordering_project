@@ -68,7 +68,7 @@ $totalCartDish=count($cartArr);
 								if(isset($_SESSION['FOOD_USER_NAME'])){
 								?>
 								<ul>
-                                    <li class="top-hover"><a href="#"><?php echo "Welcome ".$_SESSION['FOOD_USER_NAME'];?>  <i class="ion-chevron-down"></i></a>
+                                    <li class="top-hover"><a href="#"><?php echo "Welcome <span id='user_top_name>".$_SESSION['FOOD_USER_NAME'];?></span>  <i class="ion-chevron-down"></i></a>
                                         <ul>
                                             <li><a href="<?php echo FRONT_SITE_PATH?>profile">Profile  </a></li>
                                             <li><a href="<?php echo FRONT_SITE_PATH?>order_history">Order History</a></li>

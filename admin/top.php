@@ -28,6 +28,8 @@ if($cur_path=='' || $cur_path=='index.php'){    // for setting page title
 	$page_title='Manage Banner';
 }elseif($cur_path=='contact_us.php'){
 	$page_title='Contact Us';
+}elseif($cur_path=='order.php'){
+	$page_title='Order Master';
 }
 
 
@@ -104,6 +106,12 @@ if($cur_path=='' || $cur_path=='index.php'){    // for setting page title
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="order.php">
+              <i class="mdi mdi-view-headline menu-icon"></i>
+              <span class="menu-title">Order</span>
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="category.php">
               <i class="mdi mdi-view-headline menu-icon"></i>
               <span class="menu-title">Category</span>
@@ -148,6 +156,7 @@ if($cur_path=='' || $cur_path=='index.php'){    // for setting page title
               <span class="menu-title">Contact Us</span>
             </a>
           </li>
+        
           
         </ul>
       </nav>

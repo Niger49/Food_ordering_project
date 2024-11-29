@@ -39,7 +39,10 @@ jQuery('#frmLogin').on('submit',function(e){
 			if(data.status=='error'){
 				jQuery('#form_login_msg').html(data.msg);
 			}
-			if(data.status=='success'){
+			var is_checkout=jQuery('#is_checkout').val();
+			if(is_checkout=='yes'){
+				window.location.href='checkout';
+			}else if(data.status=='success'){
 				//jQuery('#form_login_msg').html(data.msg);
 				window.location.href='shop';
 			}
@@ -158,3 +161,48 @@ function delete_cart(id,is_type){
 		}
 	});
 }
+
+
+jQuery('#frmProfile').on('submit',function(e){
+	jQuery('#profile_submit').attr('disabled',true);
+	jQuery('#form_msg').html('Please wait...');
+	jQuery.ajax({
+		url:FRONT_SITE_PATH+'update_profile',
+		type:'post',
+		data:jQuery('#frmProfile').serialize(),
+		success:function(result){
+			jQuery('#form_msg').html('');
+			jQuery('#profile_submit').attr('disabled',false);
+			var data=jQuery.parseJSON(result);
+			if(data.status=='success'){
+				jQuery('#user_top_name').html(jQuery('#uname').val());
+				swal("Success Message", data.msg, "success");
+			}
+		}
+		
+	});
+	e.preventDefault();
+});
+
+jQuery('#frmPassword').on('submit',function(e){
+	jQuery('#password_submit').attr('disabled',true);
+	jQuery('#password_form_msg').html('Please wait...');
+	jQuery.ajax({
+		url:FRONT_SITE_PATH+'update_profile',
+		type:'post',
+		data:jQuery('#frmPassword').serialize(),
+		success:function(result){
+			jQuery('#password_form_msg').html('');
+			jQuery('#password_submit').attr('disabled',false);
+			var data=jQuery.parseJSON(result);
+			if(data.status=='success'){
+				swal("Success Message", data.msg, "success");
+			}
+			if(data.status=='error'){
+				swal("Error Message", data.msg, "error");
+			}
+		}
+		
+	});
+	e.preventDefault();
+});
