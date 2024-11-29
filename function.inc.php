@@ -133,12 +133,13 @@ function removeDishFromCartByid($id){
 	}
 }
 
+
 function getUserDetailsByid(){
 	global $con;
 	$data['name']='';
 	$data['email']='';
 	$data['mobile']='';
-
+	
 	if(isset($_SESSION['FOOD_USER_ID'])){
 		$row=mysqli_fetch_assoc(mysqli_query($con,"select * from user where id=".$_SESSION['FOOD_USER_ID']));
 		$data['name']=$row['name'];
@@ -171,5 +172,6 @@ function getOrderDetails($oid){
 		$data[]=$row;
 	}
 	return $data;
+	
 }
 ?>

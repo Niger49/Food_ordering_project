@@ -6,21 +6,21 @@ include('constant.inc.php');
 $totalPrice=0;
 
 if(isset($_POST['update_cart'])){
-    foreach($_POST['qty'] as $key=>$val){
-        if(isset($_SESSION['FOOD_USER_ID'])){
-            if($val[0]==0){
-                $res=mysqli_query($con,"delete from dish_cart where dish_detail_id='$key' and user_id=".$_SESSION['FOOD_USER_ID']);
-            }else{
-                $res=mysqli_query($con,"update dish_cart set qty='".$val[0]."'where dish_detail_id='$key' and user_id=".$_SESSION['FOOD_USER_ID']);
-            }
-        }else{
-            if($val[0]==0){
-                unset( $_SESSION['cart'][$key]['qty']);
-            }else{
-                $_SESSION['cart'][$key]['qty']=$val[0];
-            }
-        }
-    }
+	foreach($_POST['qty'] as $key=>$val){
+		if(isset($_SESSION['FOOD_USER_ID'])){
+			if($val[0]==0){
+				mysqli_query($con,"delete from dish_cart where dish_detail_id='$key' and user_id=".$_SESSION['FOOD_USER_ID']);
+			}else{
+				mysqli_query($con,"update dish_cart set qty='".$val[0]."' where dish_detail_id='$key' and user_id=".$_SESSION['FOOD_USER_ID']);	
+			}
+		}else{
+			if($val[0]==0){
+				unset($_SESSION['cart'][$key]['qty']);
+			}else{
+				$_SESSION['cart'][$key]['qty']=$val[0];	
+			}
+		}
+	}
 }
 
 $cartArr=getUserFullCart();
@@ -68,7 +68,7 @@ $totalCartDish=count($cartArr);
 								if(isset($_SESSION['FOOD_USER_NAME'])){
 								?>
 								<ul>
-                                    <li class="top-hover"><a href="#"><?php echo "Welcome <span id='user_top_name>".$_SESSION['FOOD_USER_NAME'];?></span>  <i class="ion-chevron-down"></i></a>
+                                    <li class="top-hover"><a href="#"><?php echo "Welcome <span id='user_top_name'>".$_SESSION['FOOD_USER_NAME'];?></span>  <i class="ion-chevron-down"></i></a>
                                         <ul>
                                             <li><a href="<?php echo FRONT_SITE_PATH?>profile">Profile  </a></li>
                                             <li><a href="<?php echo FRONT_SITE_PATH?>order_history">Order History</a></li>

@@ -179,10 +179,9 @@ jQuery('#frmProfile').on('submit',function(e){
 				swal("Success Message", data.msg, "success");
 			}
 		}
-		
 	});
 	e.preventDefault();
-});
+});	
 
 jQuery('#frmPassword').on('submit',function(e){
 	jQuery('#password_submit').attr('disabled',true);
@@ -202,7 +201,6 @@ jQuery('#frmPassword').on('submit',function(e){
 				swal("Error Message", data.msg, "error");
 			}
 		}
-		
 	});
 	e.preventDefault();
-});
+});	
