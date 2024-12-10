@@ -27,10 +27,10 @@ $res=mysqli_query($con,$sql);
                       </thead>
                       <tbody>
                         <?php if(mysqli_num_rows($res)>0){
-						$i=1;
-						while($row=mysqli_fetch_assoc($res)){
-						?>
-						<tr>
+						            $i=1;
+						            while($row=mysqli_fetch_assoc($res)){
+						            ?>
+						            <tr>
                             <td><?php echo $row['id']?></td>
                             <td>
                                 <p><?php echo $row['name']?></p>
