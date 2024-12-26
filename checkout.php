@@ -27,9 +27,11 @@ if(isset($_POST['place_order'])){
 	$checkout_zip=get_safe_value($_POST['checkout_zip']);
 	$checkout_address=get_safe_value($_POST['checkout_address']);
 	$payment_type=get_safe_value($_POST['payment_type']);
+    
+	$final_price=$totalPrice;
 	
 	$added_on=date('Y-m-d h:i:s');
-	$sql="insert into order_master(user_id,name,email,mobile,address,zipcode,total_price,order_status,payment_status,added_on) values('".$_SESSION['FOOD_USER_ID']."','$checkout_name','$checkout_email','$checkout_mobile','$checkout_address','$checkout_zip','$totalPrice','1','pending','$added_on')";
+	$sql="insert into order_master(user_id,name,email,mobile,address,zipcode,total_price,order_status,payment_status,added_on, final_price, payment_type) values('".$_SESSION['FOOD_USER_ID']."','$checkout_name','$checkout_email','$checkout_mobile','$checkout_address','$checkout_zip','$totalPrice','1','pending','$added_on','$final_price','$payment_type')";
 	mysqli_query($con,$sql);
 	$insert_id=mysqli_insert_id($con);
 	$_SESSION['ORDER_ID']=$insert_id;
@@ -37,7 +39,28 @@ if(isset($_POST['place_order'])){
 		mysqli_query($con,"insert into order_detail(order_id,dish_details_id,price,qty) values('$insert_id','$key','".$val['price']."','".$val['qty']."')");
 	}
 	emptyCart();
-	redirect(FRONT_SITE_PATH.'success');
+	$getUserDetailsBy=getUserDetailsByid();
+	$email=$getUserDetailsBy['email'];
+	if($payment_type=='cod'){
+		$emailHTML=orderEmail($insert_id);
+		include('smtp/PHPMailerAutoload.php');
+		send_email($email,$emailHTML,'Order Placed');
+		redirect(FRONT_SITE_PATH.'success');
+	}
+
+	if($payment_type=='paytm'){
+		$paytm_oid=$insert_id.'_'.$_SESSION['FOOD_USER_ID'];
+		$html='<form method="post" action="pgRedirect.php" name="frmPayment" style="display:none;">
+					<input id="ORDER_ID" tabindex="1" maxlength="20" size="20"
+								name="ORDER_ID" autocomplete="off"
+								value="'.$paytm_oid.'">
+							<input id="CUST_ID" tabindex="2" maxlength="12" size="12" name="CUST_ID" autocomplete="off" value="'.$_SESSION['FOOD_USER_ID'].'"><input id="INDUSTRY_TYPE_ID" tabindex="4" maxlength="12" size="12" name="INDUSTRY_TYPE_ID" autocomplete="off" value="Retail"><input id="CHANNEL_ID" tabindex="4" maxlength="12" size="12" name="CHANNEL_ID" autocomplete="off" value="WEB"><input title="TXN_AMOUNT" tabindex="10"
+								type="text" name="TXN_AMOUNT"
+								value="'.$final_price.'"><input value="CheckOut" type="submit"	onclick=""></td></form><script type="text/javascript">document.frmPayment.submit();
+				
+		</script>';
+		echo $html;
+	}
 	
 }
 ?>
@@ -128,8 +151,12 @@ if(isset($_POST['place_order'])){
 													</div>
 													<div class="ship-wrapper">
 														<div class="single-ship">
-															<input type="radio" name="payment_type" value="cod" checked="checked">
+															<input type="radio" name="payment_type" value="cod">
 															<label>Cash on Delivery(COD)</label>
+														</div>
+														<div class="single-ship">
+															<input type="radio" name="payment_type" value="paytm" checked="checked">
+															<label>PayTm</label>
 														</div>
 														<!--<div class="single-ship">
 															<input type="radio" name="address" value="dadress">

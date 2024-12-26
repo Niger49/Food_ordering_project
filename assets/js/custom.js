@@ -95,42 +95,38 @@ function setFoodType(type){
 	jQuery('#frmCatDish')[0].submit();
 }
 
-function add_to_cart(id,type){
-	var qty=jQuery('#qty'+id).val();
-	var attr=jQuery('input[name="radio_'+id+'"]:checked').val();
-	var is_attr_checked='';
-	if(typeof attr=== 'undefined'){
-		is_attr_checked='no';
-	}
-	if(qty>0 && is_attr_checked!='no'){
-		jQuery.ajax({
-			url:FRONT_SITE_PATH+'manage_cart',
-			type:'post',
-			data:'qty='+qty+'&attt='+attr+'&type='+type,
-			success:function(result){
-				var data=jQuery.parseJSON(result);
-				swal("Congratulation!", "Dish added successfully", "success");
-				jQuery('#shop_added_msg_'+attr).html('(Added -'+qty+')');
-				jQuery('#totalCartDish').html(data.totalCartDish);
-				jQuery('#totalPrice').html(data.totalPrice+' Tk');
-				var tp1=data.totalPrice;
-				if(data.totalCartDish==1){
-					var tp=qty*data.price;
-					var html='<div class="shopping-cart-content"><ul id="cart_ul"><li class="single-shopping-cart" id="attr_'+attr+'"><div class="shopping-cart-img"><a href="javascript:void(0)"><img alt="" src="'+SITE_DISH_IMAGE+data.image+'"></a></div><div class="shopping-cart-title"><h4><a href="javascript:void(0)">'+data.dish+'</a></h4><h6>Qty: '+qty+'</h6><span>'+tp+' Tk</span></div><div class="shopping-cart-delete"><a href="javascript:void(0)" onclick=delete_cart("'+attr+'")><i class="ion ion-close"></i></a></div></li></ul><h4>Total : <span class="shop-total" id="shopTotal">'+tp+' Tk</span></h4><div class="shopping-cart-btn"><a href="cart">view cart</a><a href="checkout">checkout</a></div></div>';	
-					jQuery('.header-cart').append(html);
-				}else{
-					var tp=qty*data.price;
-					jQuery("#attr_"+attr).remove();
-					var html='<li class="single-shopping-cart" id="attr_'+attr+'"><div class="shopping-cart-img"><a href="#"><img alt="" src="'+SITE_DISH_IMAGE+data.image+'"></a></div><div class="shopping-cart-title"><h4><a href="javascript:void(0)">'+data.dish+'</a></h4><h6>Qty: '+qty+'</h6><span>'+tp+' Tk</span></div><div class="shopping-cart-delete"><a href="javascript:void(0)" onclick=delete_cart("'+attr+'")><i class="ion ion-close"></i></a></div></li>';
-					jQuery('#cart_ul').append(html);
-					jQuery('#shopTotal').html(tp1+ 'Tk');
-				}
-				
-			}
-		});
-	}else{
-		swal("Error", "Please select qty and dish item", "error");
-	}
+function add_to_cart(id, type) {
+    var qty = jQuery('#qty' + id).val();
+    var attr = jQuery('input[name="radio_' + id + '"]:checked').val();
+    var is_attr_checked = '';
+    if (typeof attr === 'undefined') {
+        is_attr_checked = 'no';
+    }
+    if (qty > 0 && is_attr_checked != 'no') {
+        jQuery.ajax({
+            url: FRONT_SITE_PATH + 'manage_cart.php',
+            type: 'post',
+            data: { qty: qty, attt: attr, type: type },
+            success: function (result) {
+                var data = jQuery.parseJSON(result);
+                if (data.status === 'not_logged_in') {
+                    // Redirect to login page
+                    swal("Login Required", "You need to log in to add items to your cart.", "warning").then(() => {
+                        window.location.href = FRONT_SITE_PATH + 'login_register.php';
+                    });
+                } else if (data.status === 'success') {
+                    swal("Success", "Item added to cart successfully!", "success");
+                    jQuery('#shop_added_msg_' + attr).html('(Added - ' + qty + ')');
+                    jQuery('#totalCartDish').html(data.totalCartDish);
+                    jQuery('#totalPrice').html(data.totalPrice + ' Tk');
+                } else {
+                    swal("Error", "Failed to add item to cart. Please try again.", "error");
+                }
+            }
+        });
+    } else {
+        swal("Error", "Please select quantity and an item.", "error");
+    }
 }
 
 function delete_cart(id,is_type){
